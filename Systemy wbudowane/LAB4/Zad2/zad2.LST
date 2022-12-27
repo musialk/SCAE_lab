@@ -1,0 +1,231 @@
+C51 COMPILER V9.51   ZAD2                                                                  05/06/2020 20:38:17 PAGE 1   
+
+
+C51 COMPILER V9.51, COMPILATION OF MODULE ZAD2
+OBJECT MODULE PLACED IN zad2.OBJ
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE zad2.c OMF2 BROWSE DEBUG TABS(2)
+
+line level    source
+
+*** WARNING C500 IN LINE 1 OF zad2.c: LICENSE ERROR (R207: REGISTRY READ ERROR)
+
+   1          #include <REGX52.H>
+   2          
+   3          #define Port P2
+   4          #define No_Key 0x0C
+   5          #define Key_is_Off P3_2==1
+   6          #define ON  0
+   7          #define OFF 1
+   8          
+   9          volatile unsigned char data ind;
+  10          sbit Led = P0^0;
+  11          
+  12          void Init(void)           // Funkcja inicjujaca elementy wewnetrzne uC
+  13            {
+  14   1          TMOD = 0x22;          // Konfiguracja Timera 1                      
+  15   1          TH1  = 0x00;          // konfiguracja Timera 1
+  16   1          TL1  = 0x00;          // konfiguracja Timera 1
+  17   1          TCON = 0x10;          // konfiguracja Timera 1
+  18   1          ET1  = 1;             // dolaczenie przerwania od Timer1 do systemu przerwan         
+  19   1          
+  20   1          EX0 = 1;              // wlaczenie przerwania od INT0
+  21   1          IT0 = 1;              // przerwanie aktywne zboczem opadajacym
+  22   1          
+  23   1          SCON  = 0x40;         // serial control - 8-Bit var. Baud Rate
+  24   1          TCLK  = 1;            // dolacz taktowanie do nadajnika portu szeregowego
+  25   1          T2CON = 0x10;         // Timer2 jako Baud Rate Generator 2400b/sek
+  26   1          RCAP2H = TH2 = 0xFF;  // wartosc poczatkowa licznika T2 - czesc H
+  27   1          RCAP2L = TL2 = 0xEE;  // wartosc poczatkowa licznika T2 - czesc L
+  28   1          TR2 = 1;              // uruchom Timer 2 - taktowanie nadajnika RS 
+  29   1          TR1 = 1;              // wlaczenie timera 1
+  30   1          EA = 1;               // wlaczenie systemu przerwan
+  31   1        }
+  32          
+  33          /*unsigned char Szukaj(unsigned char Kod_przycisku) // zamiana scankodu na dowolny kod ASCII
+  34           {
+  35             unsigned char data Value, licznik;                               // zmienne pomocnicze
+  36             unsigned char code Koder[] = {0xE7,0xEB,0xED,0xD7,0xDB,0xDD,
+  37                                            0xB7,0xBB,0xBD,0x77,0x7B,0x7D};    // tablica scankodow
+  38             unsigned char code New_Char[] = {'1','2','3','4','5','6',
+  39                                              '7','8','9','*','0','#'}; // tablica kodów ASCII                      
+             -       
+  40             
+  41             licznik=0x00;                                                    // zacznij od poczatku
+  42             while((Koder[licznik]!=Kod_przycisku)&(licznik<No_Key)){licznik++;} // znajdz scankod
+  43             Value = No_Key;
+  44             if(licznik!=No_Key){Value = New_Char[licznik];}                  // przypisz kod ASCII
+  45             return Value;                                                    // zwroc kod ASCII lub No_Key
+  46           }
+  47          */
+  48          void ISR_Timer1 (void) interrupt 3  // Timera 1 - generacja krazacego zera na porcie P2
+  49            {
+  50   1          unsigned char code Kod[] = {0xEF,0xDF,0xBF,0x7F};     // skanuj kolejne wiersze klawiatury
+  51   1          
+  52   1          Port = Kod[ind];                                      // wystawienie zera na port
+  53   1          if(Key_is_Off) {if(ind<3) {ind++;} else {ind=0;}} // Wazne, bramka wprowadza opoznienie 10ns.
+C51 COMPILER V9.51   ZAD2                                                                  05/06/2020 20:38:17 PAGE 2   
+
+  54   1                                                                // Zmiana indeksu tablicy generowana jest tylko
+  55   1                                                                // wtedy, gdy zaden przycisk nie jest wcisniety
+  56   1        }
+  57          
+  58          void sleep(void)              // odczekaj chwile  
+  59           {
+  60   1         unsigned char data x,y;
+  61   1         for(x=0;x<100;x++) 
+  62   1          for(y=0;y<100;y++){;}
+  63   1       }
+  64          
+  65          void ISR_INT0 (void) interrupt 0    // INT0 - wylapywanie wcisnietych przycisku
+  66            {
+  67   1          unsigned char data Value, Key;  // zmienne pomocnicze
+  68   1          
+  69   1           TR1=0;               // wylacz timer 1
+  70   1           Key = P2;               // pobranie kodu klawisza
+  71   1           Value = Key;     // okresl kod ASCII przycisku
+  72   1           if(Value!=No_Key)        // wykonaj jesli kod ASCII jest prawidlowy
+  73   1            {
+  74   2              if(Value==0xE7 || Value==0xD7 || Value==0xB7 || Value==0x77)
+  75   2              {
+  76   3              Led = ON;             // zapal diode
+  77   3              sleep();              // poczekaj by bylo widac blysk diody
+  78   3               EX0=0;             // wylacz przerwanie INT0 (czytanie przyciskow)
+  79   3                TI = 0;             // przygotuj wysylanie znakow 
+  80   3                 SBUF = Value;      // Obsluga: transmisja znaku portem szeregowym
+  81   3                 while(TI==0){;}    // odczekaj dopoki znak jest transmitowany
+  82   3               TI=0;             // na wszelki wypadek wygas flage przerwania od INT0
+  83   3               EX0=1;             // wlacz obsluge INT0
+  84   3              Led = OFF;            // zgas diode
+  85   3              Led = ON;             // zapal diode
+  86   3              sleep();              // poczekaj by bylo widac blysk diody
+  87   3               EX0=0;             // wylacz przerwanie INT0 (czytanie przyciskow)
+  88   3                TI = 0;             // przygotuj wysylanie znakow 
+  89   3                 SBUF = Value;      // Obsluga: transmisja znaku portem szeregowym
+  90   3                 while(TI==0){;}    // odczekaj dopoki znak jest transmitowany
+  91   3               TI=0;             // na wszelki wypadek wygas flage przerwania od INT0
+  92   3               EX0=1;             // wlacz obsluge INT0
+  93   3              Led = OFF; 
+  94   3              sleep();
+  95   3              sleep();
+  96   3            }
+  97   2            if(Value==0xEB || Value==0xDB || Value==0xBB || Value==0x7B)
+  98   2              {
+  99   3              Led = ON;            
+ 100   3              sleep();             
+ 101   3               EX0=0;             
+ 102   3                TI = 0;            
+ 103   3                 SBUF = Value;      
+ 104   3                 while(TI==0){;}   
+ 105   3               TI=0;            
+ 106   3               EX0=1;           
+ 107   3              Led = OFF;          
+ 108   3              sleep();
+ 109   3              Led = ON;             
+ 110   3              sleep();              
+ 111   3               EX0=0;             
+ 112   3                TI = 0;             
+ 113   3                 SBUF = Value;     
+ 114   3                 while(TI==0){;}   
+ 115   3               TI=0;
+C51 COMPILER V9.51   ZAD2                                                                  05/06/2020 20:38:17 PAGE 3   
+
+ 116   3               EX0=1;            
+ 117   3              Led = OFF;        
+ 118   3              sleep();        
+ 119   3              sleep();
+ 120   3              sleep();        
+ 121   3              sleep();
+ 122   3            }
+ 123   2              if(Value==0xED || Value==0xDD || Value==0xBD || Value==0x7D)  
+ 124   2                {
+ 125   3                Led = ON;            
+ 126   3                sleep();             
+ 127   3                  EX0=0;             
+ 128   3                    TI = 0;            
+ 129   3                      SBUF = Value;      
+ 130   3                      while(TI==0){;}   
+ 131   3                    TI=0;            
+ 132   3                  EX0=1;           
+ 133   3                Led = OFF;          
+ 134   3                sleep();
+ 135   3                Led = ON;             
+ 136   3                sleep();              
+ 137   3                  EX0=0;             
+ 138   3                    TI = 0;             
+ 139   3                      SBUF = Value;     
+ 140   3                      while(TI==0){;}   
+ 141   3                    TI=0;
+ 142   3                  EX0=1;            
+ 143   3                Led = OFF;        
+ 144   3                sleep();
+ 145   3                Led = ON;            
+ 146   3                sleep();            
+ 147   3                  EX0=0;           
+ 148   3                    TI = 0;            
+ 149   3                      SBUF = Value;      
+ 150   3                      while(TI==0){;}    
+ 151   3                    TI=0;             
+ 152   3                  EX0=1;            
+ 153   3                Led = OFF;          
+ 154   3                sleep();
+ 155   3                sleep();
+ 156   3                sleep();
+ 157   3                sleep();
+ 158   3                sleep();
+ 159   3                sleep();
+ 160   3                }
+ 161   2                Led = ON;             
+ 162   2                sleep();              
+ 163   2                  EX0=0;             
+ 164   2                    TI = 0;             
+ 165   2                      SBUF = Value;      
+ 166   2                      while(TI==0){;}    
+ 167   2                    TI=0;             
+ 168   2                  EX0=1;             
+ 169   2                Led = OFF;          
+ 170   2                sleep();
+ 171   2                Led = ON;             
+ 172   2                sleep();             
+ 173   2                  EX0=0;             
+ 174   2                    TI = 0;           
+ 175   2                      SBUF = Value;     
+ 176   2                      while(TI==0){;}    
+ 177   2                    TI=0;             
+C51 COMPILER V9.51   ZAD2                                                                  05/06/2020 20:38:17 PAGE 4   
+
+ 178   2                  EX0=1;             
+ 179   2                Led = OFF;          
+ 180   2                sleep();      
+ 181   2          }   
+ 182   1          TR1=1 ;                  // wlacz timer 1
+ 183   1        }  
+ 184          void Default(void)
+ 185            {
+ 186   1          ind  = 0;              // indeks wiersza klawiatury
+ 187   1          Port = ind;              // inicjowanie porty klawiatury
+ 188   1        }
+ 189          
+ 190          void main(void)  // program glowny
+ 191            {
+ 192   1          Default();   // inicjowanie zmiennych
+ 193   1          Init();      // inicjowanie urzadzen wewnetrznych
+ 194   1          while(1) {;} // pusta petla programu, a program dziala ??
+ 195   1        }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    444    ----
+   CONSTANT SIZE    =      4    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      1    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  1 WARNING(S),  0 ERROR(S)

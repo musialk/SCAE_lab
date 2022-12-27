@@ -1,0 +1,101 @@
+C51 COMPILER V9.51   U5                                                                    09/13/2020 22:20:39 PAGE 1   
+
+
+C51 COMPILER V9.51, COMPILATION OF MODULE U5
+OBJECT MODULE PLACED IN u5.OBJ
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE u5.c OMF2 BROWSE DEBUG TABS(2)
+
+line level    source
+
+*** WARNING C500 IN LINE 1 OF u5.c: LICENSE ERROR (R207: REGISTRY READ ERROR)
+
+   1          #include <REGX52.H>
+   2          
+   3          #define max 0xFF
+   4          #define min 0x00
+   5          #define nex (max/3)
+   6          #define speed1 (nex*1)
+   7          #define speed2 (nex*2)
+   8          #define speed3 (nex*3)
+   9          #define speed0 min
+  10          
+  11          volatile unsigned char data kod;
+  12          volatile unsigned char data wpis;
+  13          volatile unsigned char data Licznik = 0x00;
+  14          volatile unsigned char data Silnik = 0x00;
+  15          unsigned char bdata stan = 0x00;
+  16          bit wybor = 1;
+  17          
+  18          sbit En1 = P2^3;
+  19          sbit En2 = P2^4;
+  20          sbit stan_0 = stan^0;
+  21          sbit stan_1 = stan^1;
+  22          
+  23          void set(unsigned char predkosc)
+  24            {
+  25   1          if(predkosc=='0') {Silnik=speed0;}
+  26   1            if(predkosc=='1') {Silnik=speed1;}
+  27   1            if(predkosc=='2') {Silnik=speed2;}
+  28   1            if(predkosc=='3') {Silnik=speed3;}
+  29   1        }
+  30            
+  31          void pwm (void) interrupt 5
+  32            {
+  33   1          TF2 = 0;
+  34   1          EXF2 = 0;
+  35   1          if ((Licznik <= Silnik) & (wpis == 0))
+  36   1          {
+  37   2            P2 |= 0x18;
+  38   2            wpis = 1;
+  39   2          }
+  40   1          if ((Licznik > Silnik) & (wpis == 1))
+  41   1          {
+  42   2            P2 &= 0xE7;
+  43   2            wpis = 0;
+  44   2          }
+  45   1        if (Licznik == max) { Licznik = 0;}
+  46   1        Licznik++;
+  47   1      }
+  48          
+  49          void Init(void)
+  50            {
+  51   1          P2 = 0x00;
+  52   1          kod = '0';
+  53   1          ET2 = 1;
+  54   1          T2CON = 0x00;
+C51 COMPILER V9.51   U5                                                                    09/13/2020 22:20:39 PAGE 2   
+
+  55   1          TH2 = 0XFF;
+  56   1          TL2 = 0XFF;
+  57   1          RCAP2L = 0X0F0;
+  58   1          RCAP2H = 0XFF;
+  59   1          TR2 = 1;
+  60   1          kod = 0;
+  61   1          set (kod);
+  62   1          EA = 1;
+  63   1        }
+  64            
+  65          void main(void)
+  66            {
+  67   1          Init();
+  68   1          while(1)
+  69   1          {
+  70   2            stan_0 = out3;
+*** ERROR C202 IN LINE 70 OF u5.c: 'out3': undefined identifier
+  71   2            stan_1 = out4;
+*** ERROR C202 IN LINE 71 OF u5.c: 'out4': undefined identifier
+  72   2            wybor = P3_3;
+  73   2            if(wybor==0)
+  74   2            {
+  75   3              while(P3_3==0) {;}
+  76   3                if(stan==0) {kod = '0'; set (kod);}
+  77   3                if(stan==1) {kod = '1'; set (kod);}
+  78   3                if(stan==2) {kod = '2'; set (kod);}
+  79   3                if(stan==3) {kod = '3'; set (kod);}
+  80   3                P2 &= 0xBD;
+  81   3                P2 |= 0x24;
+  82   3            }
+  83   2          }
+  84   1        }
+
+C51 COMPILATION COMPLETE.  1 WARNING(S),  2 ERROR(S)

@@ -1,0 +1,86 @@
+C51 COMPILER V9.51   PROG3                                                                 04/10/2020 20:32:25 PAGE 1   
+
+
+C51 COMPILER V9.51, COMPILATION OF MODULE PROG3
+OBJECT MODULE PLACED IN prog3.OBJ
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE prog3.c OMF2 BROWSE DEBUG TABS(2)
+
+line level    source
+
+*** WARNING C500 IN LINE 1 OF prog3.c: LICENSE ERROR (R207: REGISTRY READ ERROR)
+
+   1          #include <REGX52.H>
+   2          
+   3          void Delay(void);
+   4          void Delay(void)
+   5          {
+   6   1         int j;
+   7   1         int i;
+   8   1         for(i=0;i<100;i++)
+   9   1         {
+  10   2            for(j=0;j<100;j++){}
+  11   2         }
+  12   1      }
+  13          
+  14          void main (void){
+  15   1        while(1){
+  16   2          if (P3_2 == 0)
+  17   2         {
+  18   3            P2 = 0xFE;
+  19   3          Delay ();
+  20   3            P2 = 0xFD;
+  21   3          Delay ();
+  22   3            P2 = 0xFB;
+  23   3          Delay ();
+  24   3            P2 = 0xF7;
+  25   3          Delay ();
+  26   3            P2 = 0xEF;
+  27   3          Delay ();    
+  28   3            P2 = 0xDF;
+  29   3          Delay ();
+  30   3            P2 = 0xBF;
+  31   3          Delay ();
+  32   3           P2 = 0x7F;
+  33   3          Delay ();
+  34   3         }
+  35   2      
+  36   2         else {
+  37   3           P2 = 0x7F;
+  38   3          Delay ();
+  39   3            P2 = 0xBF;
+  40   3          Delay ();
+  41   3            P2 = 0xDF;
+  42   3          Delay ();
+  43   3            P2 = 0xEF;
+  44   3          Delay ();     
+  45   3            P2 = 0xF7;
+  46   3          Delay ();  
+  47   3            P2 = 0xFB;
+  48   3          Delay ();
+  49   3            P2 = 0xFD;
+  50   3          Delay ();
+  51   3            P2 = 0xFE;
+  52   3          Delay ();  
+  53   3          }
+  54   2        }
+C51 COMPILER V9.51   PROG3                                                                 04/10/2020 20:32:25 PAGE 2   
+
+  55   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    126    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  1 WARNING(S),  0 ERROR(S)

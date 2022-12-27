@@ -1,0 +1,52 @@
+C51 COMPILER V9.02   U3                                                                    09/13/2020 20:06:15 PAGE 1   
+
+
+C51 COMPILER V9.02, COMPILATION OF MODULE U3
+OBJECT MODULE PLACED IN U3.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE U3.c OMF2 BROWSE DEBUG
+
+line level    source
+
+   1          #include <REGX52.H>
+   2          
+   3          unsigned char xdata left _at_ 0xFE00;
+   4          unsigned char xdata right _at_ 0xFD00;
+   5          unsigned char code koder[] = {0x3F, 0x06};
+   6          
+   7          void main(void)
+   8                  {
+   9   1              unsigned char data index=0;
+  10   1              while(1)
+  11   1                      {
+  12   2                      left = koder[index];
+  13   2                      right = koder[index];
+  14   2                      if(P3_2 == 0)
+  15   2                       {
+  16   3                       if(index==1)(index=0);
+  17   3                              else (index=1);
+  18   3                              while(P3_2==0)
+  19   3                              {
+  20   4                                      left = koder[index];
+  21   4                                      right = koder[index];
+  22   4                              }
+  23   3                        }
+  24   2                      }
+  25   1              }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     45    ----
+   CONSTANT SIZE    =      2    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

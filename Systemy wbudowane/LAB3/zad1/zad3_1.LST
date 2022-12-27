@@ -1,0 +1,118 @@
+C51 COMPILER V9.51   ZAD3_1                                                                04/26/2020 11:12:12 PAGE 1   
+
+
+C51 COMPILER V9.51, COMPILATION OF MODULE ZAD3_1
+OBJECT MODULE PLACED IN zad3_1.OBJ
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE zad3_1.c OMF2 BROWSE DEBUG TABS(2)
+
+line level    source
+
+*** WARNING C500 IN LINE 1 OF zad3_1.c: LICENSE ERROR (R207: REGISTRY READ ERROR)
+
+   1          #include <REGX52.H>
+   2          #define Zapal P0_0=0
+   3          #define Zgas P0_0=1
+   4          
+   5          unsigned char bdata Key;
+   6          sbit Key_3=Key^3;
+   7          sbit Key_2=Key^2;
+   8          sbit Key_1=Key^1;
+   9          
+  10          void wait(void)
+  11          {
+  12   1        unsigned char data i,j;
+  13   1        for (i=0; i<200; i++)
+  14   1          for (j=0; j<100; j++)
+  15   1        {
+  16   2          ;
+  17   2        }
+  18   1      }
+  19          
+  20          void work(void)
+  21          {
+  22   1        unsigned char data i;
+  23   1        for (i=1; i>0; i--)
+  24   1        {
+  25   2          Zapal;
+  26   2          wait();
+  27   2          Zgas;
+  28   2          wait();
+  29   2        }
+  30   1      }
+  31          
+  32          void main(void)
+  33          {
+  34   1        unsigned char code Koder[]={0xEF,0xDF,0xBF,0x7F};
+  35   1        unsigned char data index=0;
+  36   1        bit Ready=1;
+  37   1      
+  38   1        while(1)
+  39   1        {
+  40   2          P2=Koder[index];
+  41   2          Key=P2;
+  42   2          if ((Key_3&Key_2&Key_1)==0)
+  43   2          {
+  44   3            if (Ready==1)
+  45   3            {
+  46   4              if (Key==0xE7)
+  47   4              work();
+  48   4              if (Key==0xEB)
+  49   4              work();
+  50   4              if (Key==0xED)
+  51   4              work();
+  52   4              if (Key==0xD7)
+  53   4              work();
+  54   4              if (Key==0xDB)
+C51 COMPILER V9.51   ZAD3_1                                                                04/26/2020 11:12:12 PAGE 2   
+
+  55   4              work();
+  56   4              if (Key==0xDD)
+  57   4              work();
+  58   4              if (Key==0xB7)
+  59   4              work();
+  60   4              if (Key==0xBB)
+  61   4              work();
+  62   4              if (Key==0xBD)
+  63   4              work();
+  64   4              if (Key==0x77)
+  65   4              work();
+  66   4              if (Key==0x7D)
+  67   4              work();
+  68   4              if (Key==0x7B)
+  69   4              work();
+  70   4            }
+  71   3            
+  72   3            Ready=0;
+  73   3          }
+  74   2          else
+  75   2          {
+  76   3            if (index<0x03)
+  77   3            {
+  78   4              index++;
+  79   4            }
+  80   3            else
+  81   3            {
+  82   4              index=0x00;
+  83   4            }
+  84   3            Ready=1;
+  85   3          }
+  86   2        }
+  87   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    169    ----
+   CONSTANT SIZE    =      4    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      1    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----       1
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  1 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,60 @@
+<html>
+<body>
+<pre>
+<h1>µVision Build Log</h1>
+<h2>Project:</h2>
+C:\Keil_Projekty\LAB4\Zad2\zad2.uvproj
+Project File Date:  05/06/2020
+
+<h2>Output:</h2>
+compiling zad2.c...
+zad2.c(1): warning C500: LICENSE ERROR (R207: REGISTRY READ ERROR)
+zad2.c - 0 Error(s), 1 Warning(s).
+Build target 'Target 1'
+linking...
+*** WARNING L16: UNCALLED FUNCTION, IGNORED FOR OVERLAY PROCESS
+    NAME:    _SZUKAJ/ZAD2
+Program Size: data=10.0 xdata=0 const=28 code=504
+creating hex file from "zad2"...
+"zad2" - 0 Error(s), 1 Warning(s).
+Rebuild target 'Target 1'
+compiling zad2.c...
+zad2.c(1): warning C500: LICENSE ERROR (R207: REGISTRY READ ERROR)
+linking...
+*** WARNING L16: UNCALLED FUNCTION, IGNORED FOR OVERLAY PROCESS
+    NAME:    _SZUKAJ/ZAD2
+Program Size: data=10.0 xdata=0 const=28 code=504
+creating hex file from "zad2"...
+"zad2" - 0 Error(s), 2 Warning(s).
+compiling zad2.c...
+zad2.c(1): warning C500: LICENSE ERROR (R207: REGISTRY READ ERROR)
+zad2.c - 0 Error(s), 1 Warning(s).
+Rebuild target 'Target 1'
+compiling zad2.c...
+zad2.c(1): warning C500: LICENSE ERROR (R207: REGISTRY READ ERROR)
+linking...
+*** WARNING L16: UNCALLED FUNCTION, IGNORED FOR OVERLAY PROCESS
+    NAME:    _SZUKAJ/ZAD2
+Program Size: data=10.0 xdata=0 const=28 code=504
+creating hex file from "zad2"...
+"zad2" - 0 Error(s), 2 Warning(s).
+compiling zad2.c...
+zad2.c(1): warning C500: LICENSE ERROR (R207: REGISTRY READ ERROR)
+zad2.c - 0 Error(s), 1 Warning(s).
+Rebuild target 'Target 1'
+compiling zad2.c...
+zad2.c(1): warning C500: LICENSE ERROR (R207: REGISTRY READ ERROR)
+linking...
+Program Size: data=10.0 xdata=0 const=4 code=459
+creating hex file from "zad2"...
+"zad2" - 0 Error(s), 1 Warning(s).
+compiling zad2.c...
+zad2.c(1): warning C500: LICENSE ERROR (R207: REGISTRY READ ERROR)
+zad2.c - 0 Error(s), 1 Warning(s).
+Rebuild target 'Target 1'
+compiling zad2.c...
+zad2.c(1): warning C500: LICENSE ERROR (R207: REGISTRY READ ERROR)
+linking...
+Program Size: data=10.0 xdata=0 const=4 code=459
+creating hex file from "zad2"...
+"zad2" - 0 Error(s), 1 Warning(s).
